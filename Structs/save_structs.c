@@ -40,20 +40,25 @@ int main(int argc, char *argv[]) {
     for (i;i<2;i++) {
         zapisz(books[i],plik);
     }
+    fclose(plik);
     // odczyt
     // najpierw przewiniecie pliku
-    rewind(plik);
+    if ((plik=fopen("book.dat", "r")) == NULL) {
+        fputs("ERROR!",stderr);
+    }
     // przygotowanie tablicy wskaznikow
-    struct book *b[2];
-    fread(b[0],sizeof(struct book),1,plik);
-    printf("ile ma i; %d\n",i);
-    printf("NAZWA:\t%s\n",b[i]->nazwa);
+    struct book *b=malloc(sizeof(struct book));
+    if (fread(b,sizeof(struct book),1,plik) == 0) {
+        fputs("blad odczytu!",stderr);
+    }
+    printf("NAZWA:\t%s\n",b->nazwa);
+    printf("AUTOR:\t%s\n",b->autor);
+    printf("CENA:\t%f\n",b->wartosc);
 //    fread(b[1],sizeof(struct book),1,plik);
 //    printf("NAZWA:\t%s\n",b[1]->nazwa);
     // konczenie
     free(book1);
     free(book2);
-    fclose(plik);
 }
 
 void czyszczenie(struct book *b) {
